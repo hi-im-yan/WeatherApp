@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -64,8 +66,10 @@ def createInfo(request):
 
     if serializer.is_valid():
         serializer.save()
+        messages.add_message(request, messages.INFO, 'Hello world.')
+        messages.info(request, 'Three credits remain in your account.')
 
-    return Response(serializer.data)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @api_view(['GET'])
