@@ -23,7 +23,7 @@ def urls(request):
 
 @api_view(['GET'])
 def listInfos(request):
-    infos = Info.objects.all()
+    infos = Info.objects.all().order_by('name')
     serializer = InfoSerializer(infos, many=True)
     return Response(serializer.data)
 
