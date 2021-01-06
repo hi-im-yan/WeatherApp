@@ -14,3 +14,13 @@ def home(request):
     }
 
     return render(request, 'app/infos.html', context)
+
+
+def detail(request, pk):
+    res = requests.get(my_api_url + 'detail_info/' + pk)
+    print(res.json)
+    context = {
+        "info": res.json()
+    }
+
+    return render(request, 'app/detail.html', context)

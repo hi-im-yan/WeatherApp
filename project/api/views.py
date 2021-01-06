@@ -7,6 +7,7 @@ from .serializers import InfoSerializer
 from .models import Info
 
 import requests
+import json
 # Create your views here.
 api_key = 'e16233c6d2ae48d05006b3bfadef3a81'
 
@@ -25,6 +26,15 @@ def urls(request):
 def listInfos(request):
     infos = Info.objects.all().order_by('name')
     serializer = InfoSerializer(infos, many=True)
+
+    all_id = []
+    for serial in serializer.data:
+        serial = json.loads(json.dumps(serial))
+        dict = {"id": str(serial['id'])}
+        all_id.append(dict)
+
+    a = requests.post(
+        'http://127.0.0.1:8000/api/update_info', json=all_id)
     return Response(serializer.data)
 
 
@@ -62,4 +72,37 @@ def createInfo(request):
 def detailInfo(request, pk):
     info = Info.objects.get(id=pk)
     serializer = InfoSerializer(instance=info, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def updateInfo(request):
+    list_id = []
+    for data in request.data:
+        list_id.append(data['id'])
+
+    list_str = ','.join(list_id)
+
+    res = requests.get('http://api.openweathermap.org/data/2.5/group?id=' +
+                       list_str + '&units=metric&appid=' + api_key + '&lang=pt')
+    res = res.json()
+
+    for data in res['list']:
+        infoData = {
+            'id': data['id'],
+            'weather': data['weather'][0]['main'],
+            'description': data['weather'][0]['description'],
+            'icon': data['weather'][0]['icon'],
+            'temperature': data['main']['temp'],
+            'feels_like': data['main']['feels_like'],
+            'temp_min': data['main']['temp_min'],
+            'temp_max': data['main']['temp_max'],
+            'humidity': data['main']['humidity'],
+            'country': data['sys']['country'],
+            'name': data['name']
+        }
+        info = Info.objects.get(id=data['id'])
+        serializer = InfoSerializer(instance=info, data=infoData)
+        if serializer.is_valid():
+            serializer.save()
     return Response(serializer.data)
