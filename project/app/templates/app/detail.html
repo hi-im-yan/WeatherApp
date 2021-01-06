@@ -1,24 +1,23 @@
 {% extends 'app/home.html' %}
 
-{% block content %}
+{% block detail %}
 
-{% for info in infos %}
 <div class="card text-white bg-info mb-3" style="width: 14rem; margin-right: 1%;">
     <div class="card-header text-warning text-center">
         <h3>{{info.name}}</h3>
     </div>
     <div class="card-body">
         <h5 class="card-subtitle mb-2 text-center">{{info.temperature}}ºC</h5>
-        <a href="detail_info/{{info.id}}" class="text-white">
-            <p class="card-text">
-                Clima: {{info.description}} <br>
-                Umidade: {{info.humidity}}
-            </p>
-        </a>
-
+        <p class="card-text">
+            Pais: {{info.country}} <br>
+            Clima: {{info.description}} <br>
+            Umidade: {{info.humidity}} <br>
+            Sensação: {{info.feels_like}} <br>
+            Temp_min: {{info.temp_min}} <br>
+            Temp_max: {{info.temp_max}} <br>
+        </p>
     </div>
 </div>
-<br>
-{% endfor %}
+
 
 {% endblock %}
