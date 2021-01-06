@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
+    'app.apps.AppConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
