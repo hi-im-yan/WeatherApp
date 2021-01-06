@@ -23,7 +23,7 @@ def urls(request):
 
 @api_view(['GET'])
 def listInfos(request):
-    infos = Info.objects.all()
+    infos = Info.objects.all().order_by('name')
     serializer = InfoSerializer(infos, many=True)
     return Response(serializer.data)
 
@@ -33,7 +33,7 @@ def createInfo(request):
     form_result = request.data
 
     res = requests.get('http://api.openweathermap.org/data/2.5/weather?q=' +
-                       form_result['name'] + '&units=metric&appid=' + api_key)
+                       form_result['name'] + '&units=metric&appid=' + api_key + '&lang=pt')
 
     res = res.json()
     infoData = {
