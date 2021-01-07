@@ -18,6 +18,10 @@
     <div class="card text-white bg-info mb-3" style="width: 14rem; margin-right: 1%;">
         <div class="card-header text-warning text-center">
             <h3>{{info.name}}</h3>
+            <form action="api/delete_info/{{info.id}}" method="post" style="display: inline-block;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm d-flex justify-content-center">X</button>
+            </form>
         </div>
         <div class="card-body">
             <h5 class="card-subtitle mb-2 text-center">{{info.temperature}}ºC</h5>
@@ -27,7 +31,6 @@
                     Umidade: {{info.humidity}}
                 </p>
             </a>
-
         </div>
     </div>
     <br>
