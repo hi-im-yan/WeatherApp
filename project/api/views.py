@@ -43,31 +43,32 @@ def listInfos(request):
 @api_view(['POST'])
 def createInfo(request):
     form_result = request.data
-
     res = requests.get('http://api.openweathermap.org/data/2.5/weather?q=' +
                        form_result['name'] + '&units=metric&appid=' + api_key + '&lang=pt')
 
+    # Checa se ja existe o CEP pedido no banco de dados
     res = res.json()
-    infoData = {
-        'id': res['id'],
-        'weather': res['weather'][0]['main'],
-        'description': res['weather'][0]['description'],
-        'icon': res['weather'][0]['icon'],
-        'temperature': res['main']['temp'],
-        'feels_like': res['main']['feels_like'],
-        'temp_min': res['main']['temp_min'],
-        'temp_max': res['main']['temp_max'],
-        'humidity': res['main']['humidity'],
-        'country': res['sys']['country'],
-        'name': res['name']
-    }
+    try:
+        info = Info.objects.get(id=res['id'])
+    except Exception:
+        infoData = {
+            'id': res['id'],
+            'weather': res['weather'][0]['main'],
+            'description': res['weather'][0]['description'],
+            'icon': res['weather'][0]['icon'],
+            'temperature': res['main']['temp'],
+            'feels_like': res['main']['feels_like'],
+            'temp_min': res['main']['temp_min'],
+            'temp_max': res['main']['temp_max'],
+            'humidity': res['main']['humidity'],
+            'country': res['sys']['country'],
+            'name': res['name']
+        }
 
-    serializer = InfoSerializer(data=infoData)
+        serializer = InfoSerializer(data=infoData)
 
-    if serializer.is_valid():
-        serializer.save()
-        messages.add_message(request, messages.INFO, 'Hello world.')
-        messages.info(request, 'Three credits remain in your account.')
+        if serializer.is_valid():
+            serializer.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
