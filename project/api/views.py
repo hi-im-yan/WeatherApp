@@ -111,3 +111,10 @@ def updateInfo(request):
         if serializer.is_valid():
             serializer.save()
     return Response(serializer.data)
+
+
+@api_view(['DELETE', 'POST'])
+def deleteInfo(request, pk):
+    info = Info.objects.get(id=pk)
+    info.delete()
+    return HttpResponseRedirect('http://127.0.0.1:8000/')
