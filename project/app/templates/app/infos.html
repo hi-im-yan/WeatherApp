@@ -6,14 +6,13 @@
     {% csrf_token %}
     {% for field in form %}
     <div class="fieldWrapper">
-        {{ field.label_tag }}
         {{ field }}
         <button class="btn btn-primary btn-sm" type="submit">Create</button>
     </div>
     {% endfor %}
 
 </form>
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center" style="margin-top: 5%;">
     {% for info in infos %}
     <div class="card text-white bg-info mb-3" style="width: 14rem; margin-right: 1%;">
         <div class="card-header text-warning text-center">
@@ -27,8 +26,10 @@
             <h5 class="card-subtitle mb-2 text-center">{{info.temperature}}ºC</h5>
             <a href="detail_info/{{info.id}}" class="text-white">
                 <p class="card-text">
-                    Clima: {{info.description}} <br>
-                    Umidade: {{info.humidity}}
+                    <label class="font-weight-bold">Clima: </label>
+                    {{info.description}} <br>
+                    <label class="font-weight-bold">Umidade: </label>
+                    {{info.humidity}}
                 </p>
             </a>
         </div>
